@@ -32,6 +32,8 @@ func main() {
 
 	sdb, err := sql.Open("postgres", psqlInfo)
 
+	defer db.Close()
+
 	if err != nil {
 		log.Fatal(err)
 	}
