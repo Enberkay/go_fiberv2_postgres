@@ -51,6 +51,7 @@ func main() {
 
 	app := fiber.New()
 
+	app.Get("/product", getProductsHandler)
 	app.Get("/product/:id", getProductHandler)
 	app.Post("/product", createProductHandler)
 	app.Put("/product/:id", updateProductHandler)
@@ -58,6 +59,14 @@ func main() {
 
 	app.Listen(":8080")
 
+}
+
+func getProductsHandler(c *fiber.Ctx) error {
+	products, err := getProducts()
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+	return c.JSON(products)
 }
 
 func getProductHandler(c *fiber.Ctx) error {
