@@ -51,20 +51,22 @@ func main() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-
 	// fmt.Println("Create Successful !")
 
 	// product, err := getProduct(2)
 	// fmt.Println("Get Successful !", product)
 
-	Product, err := updateProduct(4, &Product{Name: "Clerk", Price: 555})
+	// Product, err := updateProduct(4, &Product{Name: "Clerk", Price: 555})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Update product Successful !", Product)
 
+	err = deleteProduct(5)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Update product Successful !", Product)
-
+	fmt.Println("Delete product Successful !")
 }
 
 func createProduct(product *Product) error {
@@ -110,4 +112,12 @@ func updateProduct(id int, product *Product) (Product, error) {
 	}
 
 	return p, err
+}
+
+func deleteProduct(id int) error {
+	_, err := db.Exec(
+		"DELETE FROM public.products WHERE id=$1;",
+		id,
+	)
+	return err
 }
