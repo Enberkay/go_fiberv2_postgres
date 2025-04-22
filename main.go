@@ -47,12 +47,15 @@ func main() {
 	//Connection Database Successful.
 	fmt.Println("Connection Database Successful.")
 
-	err = createProduct(&Product{Name: "Go product 2", Price: 444})
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err = createProduct(&Product{Name: "Go product 2", Price: 444})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println("Create Successful !")
+	// fmt.Println("Create Successful !")
+
+	product, err := getProduct(2)
+	fmt.Println("Get Successful !", product)
 }
 
 func createProduct(product *Product) error {
@@ -64,4 +67,20 @@ func createProduct(product *Product) error {
 	)
 
 	return err
+}
+
+func getProduct(id int) (Product, error) {
+	var p Product
+	row := db.QueryRow(
+		"SELECT id,name,price FROM products WHERE id=$1;",
+		id,
+	)
+
+	err := row.Scan(&p.ID, &p.Name, &p.Price)
+
+	if err != nil {
+		return Product{}, err
+	}
+
+	return p, nil
 }
