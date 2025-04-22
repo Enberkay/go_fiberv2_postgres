@@ -53,6 +53,8 @@ func main() {
 
 	app.Get("/product/:id", getProductHandler)
 	app.Post("/product", createProductHandler)
+	app.Put("/product/:id", updateProductHandler)
+	app.Delete("/product/:id", deleteProductHandler)
 
 	app.Listen(":8080")
 
@@ -85,4 +87,36 @@ func createProductHandler(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(p)
+}
+
+func updateProductHandler(c *fiber.Ctx) error {
+	productId, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	p := new(Product)
+	if err := c.BodyParser(p); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	product, err := updateProduct(productId, p)
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(product)
+}
+
+func deleteProductHandler(c *fiber.Ctx) error {
+	productId, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+	err = deleteProduct(productId)
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
 }
